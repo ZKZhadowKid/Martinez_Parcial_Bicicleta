@@ -8,7 +8,7 @@ while True:
         match menu():
             case "1":
                   limpiar_pantalla()
-                  cargar_archivo_csv("bicicletas.csv", lista)
+                  cargar_archivo_csv("BicicletasData.csv", lista)
                   print("Archivo importado!")
                   flag_file = False
             case "2":

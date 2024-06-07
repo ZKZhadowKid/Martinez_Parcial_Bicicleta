@@ -221,30 +221,6 @@ def igualar_max(max, lista,campo):
         if max == i[definir_campo(campo)]:
             return i["nombre"]
 
-# def nombre_campo_max(campo):
-#     """_summary_
-
-#     Args:
-#         campo (_type_): campo a buscar el nombre mayor
-
-#     Returns:
-#         _type_: el nombre de ese campo mayor
-#     """
-#     maximo = (calcular_mayor(mapear_lista(lambda hero:hero[definir_campo(campo)], lista_personajes)))
-#     return (igualar_max(maximo, lista_personajes,campo))
-
-# def nombre_campo_min(campo):
-#     """_summary_
-
-#     Args:
-#         campo (_type_): nombre de ese campomenor
-
-#     Returns:
-#         _type_: el nombre de ese campo menor
-#     """
-#     minimo = (calcular_menor(mapear_lista(lambda hero:hero[definir_campo(campo)], lista_personajes)))
-#     return (igualar_max(minimo, lista_personajes,campo))
-
 def pausar():
     system("pause")
 
@@ -398,12 +374,25 @@ def enlistar(lista:list, campo1, campo_agrupar):
     return campo
 
 def get_path_actual(nombre_archivo):
+    """_summary_
+
+    Args:
+        nombre_archivo (_type_): Nombre del archivo actual
+
+    Returns:
+        _type_: la ubicacion del archivo en el que se trabaja
+    """
     import os
     ubi = os.path.dirname(__file__)
     
     return os.path.join(ubi, nombre_archivo)
 
 def import_json_file(archivo_datos:str):
+    """_summary_
+
+    Args:
+        archivo_datos (str): nombre del archivo .json a importar
+    """
     import json
     with open(get_path_actual(archivo_datos), "r", encoding="utf-8") as archivo:
         dato = json.load(archivo)
@@ -434,6 +423,16 @@ def cargar_archivo_csv(nombre_archivo_data:str, lista):
             lista.append(bicicleta)
             
 def asignar_tiempo(lista, ini,fin):
+    """_summary_
+
+    Args:
+        lista (_type_): lista a iterar/recorrer
+        ini (_type_): tiempo minimo
+        fin (_type_): tiempo maximo
+
+    Returns:
+        _type_: _description_
+    """
     tiempos = mapear_lista(lambda bici:bici["tiempo"] ,lista)
     for i in range(len(tiempos)):
         tiempos[i] = randint(ini,fin)
@@ -442,7 +441,15 @@ def asignar_tiempo(lista, ini,fin):
 
     return lista
         
-def asignar_ganador(lista):
+def asignar_ganador(lista:list):
+    """_summary_
+
+    Args:
+        lista (list): lista a iterar/recorrer
+
+    Returns:
+        _type_: retorna el/los diccionario/s del ganador/es
+    """
     winner = []
     ordenar_campo(lista, "time", True)
     for i in lista:
@@ -450,7 +457,12 @@ def asignar_ganador(lista):
             winner.append(i)
     return winner
 
-def crear_archivo_tipo(lista):
+def crear_archivo_tipo(lista:list):
+    """_summary_
+
+    Args:
+        lista (list): lista con datos para crear archivo
+    """
     tipe_bike = input("Ingrese el tipo de bicicleta: ")
     while tipe_bike != "BMX" and tipe_bike != "PLAYERA" and tipe_bike != "MTB" and tipe_bike != "PASEO":
         tipe_bike = input("Ingrese un tipo de bicicleta valido: ")
@@ -475,21 +487,6 @@ def crear_archivo_tipo(lista):
             linea = ",".join(l) + "\n"
             archivo.write(linea)
 
-
-def ordenar_lista(lista:list, campo:str,campo2:str, asc:bool = True):
-    if isinstance(lista,list):
-        atributo = definir_campo(campo)
-        atributo2 = definir_campo(campo2)
-        tam = len(lista)
-        for i in range(tam - 1):
-            for j in range(i + 1, tam):
-                if lista[i][atributo] == lista[j][atributo]:
-                      if lista[i][atributo2] > lista[j][atributo2]:
-                          swap_lista(lista,i,j)
-                elif lista[i][atributo] > lista[j][atributo]:
-                    swap_lista(lista,i,j)
-    else:
-        raise ValueError("No se ingreso ninguna lista") 
 
 
 
