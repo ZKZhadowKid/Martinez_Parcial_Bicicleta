@@ -148,24 +148,16 @@ def definir_campo(campo:str)->str:
     match campo:
         case "n":
             retorno = "nombre"
-        case "i":
-            retorno = "identidad"
-        case "e":
-            retorno = "empresa"
-        case "a":
-            retorno = "altura"
-        case "p":
-            retorno = "peso"
-        case "f":
-            retorno = "fuerza"
-        case "int":
-            retorno = "inteligencia"
-        case "g":
-            retorno = "genero"
+        case "id":
+            retorno = "id_bike"
+        case "tipe":
+            retorno = "tipo"
+        case "time":
+            retorno = "tiempo"
         case _: raise ValueError("No es un campo valido")
     return retorno
 
-def ordenar_heroes(heroes:list, campo:str, asc:bool = True):
+def ordenar_campo(lista:list, campo:str, asc:bool = True):
     """_summary_
 
     Args:
@@ -176,13 +168,13 @@ def ordenar_heroes(heroes:list, campo:str, asc:bool = True):
     Raises:
         ValueError: No se habria ingresado ninguna lista
     """
-    if isinstance(heroes,list):
+    if isinstance(lista,list):
         atributo = definir_campo(campo)
-        tam = len(heroes)
+        tam = len(lista)
         for i in range(tam - 1):
             for j in range(i + 1, tam):
-                if heroes[i][atributo] > heroes[j][atributo] if asc else heroes[i][atributo] < heroes[j][atributo]:
-                    swap_lista(heroes, i, j)  
+                if lista[i][atributo] > lista[j][atributo] if asc else lista[i][atributo] < lista[j][atributo]:
+                    swap_lista(lista, i, j)  
     else:
         raise ValueError("No se ingreso ninguna lista") 
 
@@ -266,35 +258,16 @@ def menu()->str:
         str: Menu de stark
     """
     limpiar_pantalla()
-    print("      Menu de Stark")
-    print("1-Mostrar nombres")
-    print("2-Mostrar nombres junto a su altura")
-    print("3-Mostrar la altura maxima")
-    print("4-Mostrar la altura minima")
-    print("5-Mostrar el promedio de las alturas")
-    print("6-Mostrar nombre del heroe mas alto")
-    print("7-Mostrar nombre del heroe mas bajo")
-    print("8-Mostrar nombre del heroe mas pesado")
-    print("9-Mostrar nombre del heroe menos pesado")
-    print("10-Nombre de heroees masculinos")
-    print("11-Nombre de heroees femeninos")
-    print("12-Altura max masculino")
-    print("13-Altura max femenino")
-    print("14-Altura min masculino")
-    print("15-Altura min femenino")
-    print("16-Altura promedio masculinos")
-    print("17-Altura promedio femeninos")
-    print("18-Nombre altura max masculino")
-    print("19-Nombre altura max femenino")
-    print("20-Nombre altura min masculino")
-    print("21-Nombre altura min femenino")
-    print("22-Cantidad colores de ojos")
-    print("23-Cantidad colores de pelo")
-    print("24-Cantidad clasificacion inteligencia")
-    print("25-Listar todos los superhéroes agrupados por color de ojos.")
-    print("26-Listar todos los superhéroes agrupados por color de pelo.")
-    print("27-Listar todos los superhéroes agrupados por tipo de inteligencia")
-    print("28-Salir")
+    print("      BikeCarrer Menu")
+    print("1-Cargar Archivo.CSV")
+    print("2-Imprimir lista")
+    print("3-Asignar tiempos")
+    print("4-Informar ganador")
+    print("5-Filtrar por tipo")
+    print("6-Informar promedio por tipo")
+    print("7-Mostrar posiciones")
+    print("8-Guardar posiciones(Archivo JSON)")
+    print("9-Salir")
     return  input("Ingrese opcion: ")
 
 def contador_lista(lista,campo):
@@ -333,7 +306,7 @@ def totalizar_lista(lista:list)->int:
     if isinstance(lista, list):
         total = 0
         for el in lista:
-            total += el
+            total += int(el)
         return total
     raise ValueError("Eso no es una lista")
 
@@ -439,3 +412,91 @@ def export_json_file(archivo_destino:str):
     import json
     with open(get_path_actual(archivo_destino), "w", encoding="utf-8") as archivo:
         json.dump("****dato****", archivo, indent=2)
+
+def cargar_archivo_csv(nombre_archivo_data:str, lista):
+    """_summary_
+
+    Args:
+        nombre_archivo_data (str): Nombre del archivo de donde se obtendra la informacion
+    """
+    with open(get_path_actual(nombre_archivo_data), "r", encoding="utf-8") as archivo:
+         encabezado = archivo.readline().strip("\n").split(",")
+    
+         for linea in archivo.readlines():
+            bicicleta = {}
+            linea = linea.strip("\n").split(",")
+            id_bike, nombre, tipo, tiempo = linea
+            bicicleta["id_bike"] = int(id_bike)
+            bicicleta["nombre"] = nombre
+            bicicleta["tipo"] = tipo
+            bicicleta["tiempo"] = tiempo
+            
+            lista.append(bicicleta)
+            
+def asignar_tiempo(lista, ini,fin):
+    tiempos = mapear_lista(lambda bici:bici["tiempo"] ,lista)
+    for i in range(len(tiempos)):
+        tiempos[i] = randint(ini,fin)
+    for i in range(len(lista)):
+        lista[i]["tiempo"] = tiempos[i]
+
+    return lista
+        
+def asignar_ganador(lista):
+    winner = []
+    ordenar_campo(lista, "time", True)
+    for i in lista:
+        if i["tiempo"] == lista[0]["tiempo"]:
+            winner.append(i)
+    return winner
+
+def crear_archivo_tipo(lista):
+    tipe_bike = input("Ingrese el tipo de bicicleta: ")
+    while tipe_bike != "BMX" and tipe_bike != "PLAYERA" and tipe_bike != "MTB" and tipe_bike != "PASEO":
+        tipe_bike = input("Ingrese un tipo de bicicleta valido: ")
+    lista_tipo = (filtrar_lista(lambda bike: bike["tipo"] == tipe_bike, lista))
+    
+    with open(get_path_actual(tipe_bike + ".csv"), "w", encoding="utf-8") as archivo:
+        encabezado = ",".join(list(lista[0].keys())) + "\n"
+        archivo.write(encabezado)
+        for i in range(len(lista_tipo)):
+            l = ",".join(lista_tipo[i]) + "\n"
+    
+        for persona in lista_tipo:
+            values = list(persona.values())
+            l = []
+            for value in values:
+                if isinstance(value,int):
+                    l.append(str(value))
+                elif isinstance(value,float):
+                    l.append(str(value))
+                else:
+                    l.append(value)
+            linea = ",".join(l) + "\n"
+            archivo.write(linea)
+
+
+def ordenar_lista(lista:list, campo:str,campo2:str, asc:bool = True):
+    if isinstance(lista,list):
+        atributo = definir_campo(campo)
+        atributo2 = definir_campo(campo2)
+        tam = len(lista)
+        for i in range(tam - 1):
+            for j in range(i + 1, tam):
+                if lista[i][atributo] == lista[j][atributo]:
+                      if lista[i][atributo2] > lista[j][atributo2]:
+                          swap_lista(lista,i,j)
+                elif lista[i][atributo] > lista[j][atributo]:
+                    swap_lista(lista,i,j)
+    else:
+        raise ValueError("No se ingreso ninguna lista") 
+
+
+
+
+
+
+
+
+
+
