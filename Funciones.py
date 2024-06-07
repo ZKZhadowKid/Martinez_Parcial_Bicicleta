@@ -487,7 +487,20 @@ def crear_archivo_tipo(lista:list):
             linea = ",".join(l) + "\n"
             archivo.write(linea)
 
-
+def ordenar_lista_doble(lista, campo1, campo2):
+    if isinstance(lista,list):
+            atributo = definir_campo(campo1)
+            atributo2 = definir_campo(campo2)
+            tam = len(lista)
+            for i in range(tam - 1):
+                for j in range(i + 1, tam):
+                    if lista[i][atributo] == lista[j][atributo]:
+                        if lista[i][atributo2] > lista[j][atributo2]:
+                            swap_lista(lista, i, j)  
+                    elif lista[i][atributo] > lista[j][atributo]:
+                        swap_lista(lista,i,j)
+    else:
+        raise ValueError("No se ingreso ninguna lista") 
 
 
 

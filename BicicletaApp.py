@@ -48,7 +48,7 @@ while True:
             case "7":
                   limpiar_pantalla()
                   if flag_file == False:
-                        ordenar_lista(lista,"tipe", "time")
+                        ordenar_lista_doble(lista,"tipe", "time")
                         mostrar_dato(lista)
                   else:
                         print("Primero debe ingresar archivo csv")
